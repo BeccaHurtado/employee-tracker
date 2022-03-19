@@ -58,6 +58,34 @@ function init () {
     })
 }
 
+function viewDepartments() {
+
+}
+
+function viewRoles() {
+
+}
+
+function viewEmployees() {
+
+}
+
+function addDepartment() {
+
+}
+
+function addRole() {
+
+}
+
+function addEmployee() {
+
+}
+
+function updateEmployee() {
+    
+}
+
 init();
 
 app.listen(PORT, () => {
