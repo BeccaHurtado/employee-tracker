@@ -1,26 +1,24 @@
-const express = require('express');
+
 const inquirer = require('inquirer')
 const mysql = require('mysql2');
-const PORT = process.env.PORT || 6000;
-const app = express();
-
-// Express middleware
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-
+require('console.table')
 // Connects to database
 const db = mysql.createConnection(
     {
         host: 'localhost',
         user: 'root',
         password: 'becca123',
-        database: 'employee',
-    },
+        database: 'employee_tracker',
+    })
+
+db.connect(function (err) {
     console.log('Connected to database')
-)
+    init()
+})
+
 
 // functions that prompts user with options
-function init () {
+function init() {
     inquirer.prompt([
         {
             type: 'list',
@@ -28,8 +26,8 @@ function init () {
             message: 'What would you like to view?',
             choices: ['View all Departments', 'View all Roles', 'View all Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update Employee Role', 'Exit']
         }
-    ]).then(function(response) {
-        switch(response.type) {
+    ]).then(function (response) {
+        switch (response.menu) {
             case "View all Departments":
                 viewDepartments()
                 break;
@@ -59,29 +57,43 @@ function init () {
 }
 
 function viewDepartments() {
- app.get('/api/department', (req, res) => {
-     const sql = `SELECT * FROM department`;
+    
+        const sql = `SELECT * FROM department`;
 
-     db.query(sql, (err, rows) => {
-         if (err) {
-             res.status(500).json({ error: err.message });
-             return;
-         }
-         res.json({
-             message: 'success',
-             data: rows
-         });
-     });
- });
- init();
+        db.query(sql, (err, rows) => {
+            if (err) {
+                res.status(500).json({ error: err.message });
+                return;
+            }
+            console.table(rows)
+            init()
+        });
 }
 
 function viewRoles() {
+    const sql = `SELECT * FROM roles`;
 
+    db.query(sql, (err, rows) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        console.table(rows)
+        init()
+    });
 }
 
 function viewEmployees() {
+    const sql = `SELECT * FROM employee`;
 
+    db.query(sql, (err, rows) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        console.table(rows)
+        init()
+    });
 }
 
 function addDepartment() {
@@ -104,8 +116,4 @@ function exitApp() {
 
 }
 
-init();
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
-})
