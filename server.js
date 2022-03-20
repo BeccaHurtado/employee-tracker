@@ -105,7 +105,43 @@ function addRole() {
 }
 
 function addEmployee() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'first_name',
+            message: 'Insert Employee Name'
+        },
+        {
+            type: 'input',
+            name: 'last_name',
+            message: 'Insert Employee Last Name'
+        },
+        {
+            type: 'list',
+            name: 'role_id',
+            message: 'Choose Employee Role Id',
+            choices: [1, 2, 3, 4, 5, 6]
+        },
+        {
+            type: 'list',
+            name: 'manager_id',
+            message: 'Choose Employee Manager Id',
+            choices: [1, 2, 3]
+        },
+    ]).then(function(response) {
+        const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ( ?, ?, ?, ?)`;
 
+        const employee_values = [response.first_name, response.last_name, response.role_id, response.manager_id]
+
+        db.query(sql, employee_values, (err, rows) => {
+            if (err) {
+                res.status(500).json({ error: err.message });
+                return;
+            }
+            console.table(rows)
+            init()
+        });
+    })
 }
 
 function updateEmployee() {
