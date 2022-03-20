@@ -26,7 +26,7 @@ function init () {
             type: 'list',
             name: 'menu',
             message: 'What would you like to view?',
-            choices: ['View all Departments', 'View all Roles', 'View all Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update Employee Role']
+            choices: ['View all Departments', 'View all Roles', 'View all Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update Employee Role', 'Exit']
         }
     ]).then(function(response) {
         switch(response.type) {
@@ -59,7 +59,21 @@ function init () {
 }
 
 function viewDepartments() {
+ app.get('/api/department', (req, res) => {
+     const sql = `SELECT * FROM department`;
 
+     db.query(sql, (err, rows) => {
+         if (err) {
+             res.status(500).json({ error: err.message });
+             return;
+         }
+         res.json({
+             message: 'success',
+             data: rows
+         });
+     });
+ });
+ init();
 }
 
 function viewRoles() {
@@ -83,7 +97,11 @@ function addEmployee() {
 }
 
 function updateEmployee() {
-    
+
+}
+
+function exitApp() {
+
 }
 
 init();
