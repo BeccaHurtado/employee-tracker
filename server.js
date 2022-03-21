@@ -97,11 +97,60 @@ function viewEmployees() {
 }
 
 function addDepartment() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'dep_name',
+            message: 'Insert Name of New Department'
+        }
+    ]).then(function(response) {
+        const sql = `INSERT INTO department (dep_name) VALUES (?)`;
 
+        const employee_values = [response.dep_name]
+
+        db.query(sql, employee_values, (err, rows) => {
+            if (err) {
+                res.status(500).json({ error: err.message });
+                return;
+            }
+            console.table(rows)
+            init()
+        });
+    })
 }
 
 function addRole() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'role_title',
+            message: 'Insert Name of New Role'
+        },
+        {
+            type: 'input',
+            name: 'role_salary',
+            message: "Insert the Role's Salary"
+        },
+        {
+            type: 'list',
+            name: 'role_dep_id',
+            message: 'Insert Department Id',
+            choices: [1, 2, 3, 4, 5, 6, 7]
+        }
+    ]).then(function(response) {
+        const sql = `INSERT INTO roles (title, salary, department_id) VALUES ( ?, ?, ?)`;
 
+        const employee_values = [response.role_title, response.role_salary, response.role_dep_id]
+
+        db.query(sql, employee_values, (err, rows) => {
+            if (err) {
+                res.status(500).json({ error: err.message });
+                return;
+            }
+            console.table(rows)
+            init()
+        });
+    })
 }
 
 function addEmployee() {
@@ -145,7 +194,33 @@ function addEmployee() {
 }
 
 function updateEmployee() {
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'id',
+            message: 'Choose employee id',
+            choices: [1, 2, 3, 4, 5, 6, 7]
+        },
+        {
+            type: 'list',
+            name: 'role_id',
+            message: 'Choose new Role Id',
+            choices: [1, 2, 3, 4, 5, 6]
+        },
+    ]).then(function(response) {
+        const sql = `update employee set role_id=? where id=? ;`;
 
+        const employee_values = [response.role_id, response.id]
+
+        db.query(sql, employee_values, (err, rows) => {
+            if (err) {
+                res.status(500).json({ error: err.message });
+                return;
+            }
+            console.table(rows)
+            init()
+        });
+    })
 }
 
 function exitApp() {
