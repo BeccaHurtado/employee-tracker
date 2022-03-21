@@ -1,7 +1,8 @@
 
 const inquirer = require('inquirer')
 const mysql = require('mysql2');
-require('console.table')
+const cTable = require('console.table');
+
 // Connects to database
 const db = mysql.createConnection(
     {
@@ -56,7 +57,6 @@ function init() {
                 deleteRoles()
                 break;
             case "Exit":
-                exitApp()
                 break;
         }
     })
@@ -276,8 +276,28 @@ function deleteRoles() {
     })
 }
 
-function exitApp() {
-    
+function deleteEmployee() {
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'del_employee',
+            message: 'Which Employee Would You Like to Delete?',
+            choices: [1, 2, 3, 4, 5, 6, 7]
+        }
+    ]).then(function(response) {
+        const sql = 'DELETE FROM employee WHERE id = ?';
+
+        const employee_values = [response.del_employee]
+
+        db.query(sql, employee_values, (err, rows) => {
+            if (err) {
+                res.status(500).json({ error: err.message });
+                return;
+            }
+            console.table(rows)
+            init()
+        });
+    })
 }
 
 
