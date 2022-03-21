@@ -24,7 +24,7 @@ function init() {
             type: 'list',
             name: 'menu',
             message: 'What would you like to view?',
-            choices: ['View all Departments', 'View all Roles', 'View all Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update Employee Role','Delete A Department', 'Exit']
+            choices: ['View all Departments', 'View all Roles', 'View all Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update Employee Role','Delete A Department', 'Delete a Role', 'Exit']
         }
     ]).then(function (response) {
         switch (response.menu) {
@@ -52,6 +52,9 @@ function init() {
             case "Delete A Department":
                 deleteDepartment()
                 break;
+            case "Delete a Role":
+                deleteRoles()
+                break;
             case "Exit":
                 exitApp()
                 break;
@@ -59,8 +62,7 @@ function init() {
     })
 }
 
-function viewDepartments() {
-    
+function viewDepartments() {  
         const sql = `SELECT * FROM department`;
 
         db.query(sql, (err, rows) => {
@@ -238,6 +240,30 @@ function deleteDepartment() {
         const sql = 'DELETE FROM department WHERE id = ?';
 
         const employee_values = [response.del_dep]
+
+        db.query(sql, employee_values, (err, rows) => {
+            if (err) {
+                res.status(500).json({ error: err.message });
+                return;
+            }
+            console.table(rows)
+            init()
+        });
+    })
+}
+
+function deleteRoles() {
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'del_role',
+            message: 'Which Role Would You Like to Delete?',
+            choices: [1, 2, 3, 4, 5, 6, 7]
+        }
+    ]).then(function(response) {
+        const sql = 'DELETE FROM roles WHERE id = ?';
+
+        const employee_values = [response.del_role]
 
         db.query(sql, employee_values, (err, rows) => {
             if (err) {
