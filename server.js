@@ -25,7 +25,17 @@ function init() {
             type: 'list',
             name: 'menu',
             message: 'What would you like to view?',
-            choices: ['View all Departments', 'View all Roles', 'View all Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update Employee Role','Delete A Department', 'Delete a Role', 'Exit']
+            choices: [
+            'View all Departments',
+            'View all Roles', 
+            'View all Employees', 
+            'Add a Department', 
+            'Add a Role', 
+            'Add an Employee', 
+            'Update Employee Role',
+            'Delete A Department', 
+            'Delete a Role', 
+            'Exit']
         }
     ]).then(function (response) {
         switch (response.menu) {
@@ -57,9 +67,11 @@ function init() {
                 deleteRoles()
                 break;
             case "Exit":
+                db.end()
                 break;
         }
     })
+    .catch((err) => console.log(err))
 }
 
 function viewDepartments() {  
